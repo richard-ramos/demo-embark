@@ -44,8 +44,8 @@ class Report extends Component {
             isSubmitting: false,
             canVote: true,
             vote: 0,
-            upvotes: parseInt(props.upvotes, 10),
-            downvotes: parseInt(props.downvotes, 10)
+            upvotes: props.upvotes,
+            downvotes: props.downvotes
         };
     }
 
@@ -138,8 +138,8 @@ class Report extends Component {
 }
 
 Report.propTypes = {
-    upvotes: PropTypes.string.isRequired,
-    downvotes: PropTypes.string.isRequired,
+    upvotes: PropTypes.number.isRequired,
+    downvotes: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired,
     id: PropTypes.number.isRequired,
     owner: PropTypes.string.isRequired,

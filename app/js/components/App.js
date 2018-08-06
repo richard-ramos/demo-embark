@@ -4,6 +4,7 @@ import EmbarkJS from 'Embark/EmbarkJS';
 import Header from './Header';
 import Report from './Report';
 import ReportManager from 'Embark/contracts/ReportManager';
+import _ from 'lodash';
 
 class App extends Component {
 
@@ -12,7 +13,9 @@ class App extends Component {
 
     this.state = {
       'displayForm': false,
-      'list': []
+      'list': [],
+      'sortBy': 'age',
+      'sortOrder': 'desc'
     };
   }
 
@@ -22,8 +25,13 @@ class App extends Component {
     });
   }
 
-  toggleForm = () => {
+  _toggleForm = () => {
     this.setState({displayForm: !this.state.displayForm});
+  }
+
+  _setSortOrder = (sortBy) => {
+    const sortOrder = (this.state.sortOrder == 'asc' && this.state.sortBy == sortBy) || this.state.sortBy != sortBy ? 'desc' : 'asc';
+    this.setState({sortBy, sortOrder});
   }
 
   _loadReports = async () => {
@@ -39,6 +47,8 @@ class App extends Component {
         list = await Promise.all(list);
         list = list.map((value, index) => { 
                       value.id = index; 
+                      value.upvotes = parseInt(value.upvotes, 10);
+                      value.downvotes = parseInt(value.downvotes, 10);
                       return value; 
                     });
     }
@@ -46,11 +56,19 @@ class App extends Component {
   }
 
   render() {
-    const {displayForm, list} = this.state;
+    const {displayForm, list, sortBy, sortOrder} = this.state;
+
+    let orderedList;
+    if(sortBy == 'rating'){
+      orderedList = _.orderBy(list, [function(o) { return o.upvotes - o.downvotes; }, 'creationDate'], [sortOrder, sortOrder]);
+    } else {
+      orderedList = _.orderBy(list, 'creationDate', sortOrder);
+    }
+
     return (<Fragment>
-        <Header toggleForm={this.toggleForm} />
+        <Header toggleForm={this._toggleForm} sortOrder={this._setSortOrder} />
         { displayForm && <Create afterPublish={this._loadReports} /> }
-        { list.map((record, i) => <Report key={i} {...record} />) }
+        { orderedList.map((record) => <Report key={record.id} {...record} />) }
         </Fragment>
     );
   }

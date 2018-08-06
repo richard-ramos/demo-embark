@@ -23,18 +23,25 @@ const options = [
  'Sort by age',
  'Sort by rating'
 ];
-
 class Header extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      anchorEl: null
+      anchorEl: null,
+      sortIndex: 0
     };
   }
 
   handleClick = event => {
+    event.preventDefault();
     this.setState({anchorEl: event.currentTarget});
+  };
+
+  handleMenuClick = index => event => {
+    event.preventDefault();
+    this.setState({selectedIndex: index, anchorEl: null});
+    this.props.sortOrder(index == 0 ? 'age' : 'rating');
   };
 
   handleClose = () => {
@@ -43,7 +50,7 @@ class Header extends Component {
 
   render(){
     const {classes, toggleForm} = this.props;
-    const {anchorEl} = this.state;
+    const {anchorEl, sortIndex} = this.state;
     const open = Boolean(anchorEl);
 
     return (
@@ -69,8 +76,8 @@ class Header extends Component {
                     width: 200
                   }
                 }}>
-                {options.map(option => (
-                  <MenuItem key={option} selected={option === 'Pyxis'}>
+                {options.map((option, i) => (
+                  <MenuItem key={option} selected={i == sortIndex} onClick={this.handleMenuClick(i)}>
                     {option}
                   </MenuItem>
                 ))}
@@ -84,7 +91,8 @@ class Header extends Component {
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
-  toggleForm: PropTypes.func.isRequired
+  toggleForm: PropTypes.func.isRequired,
+  sortOrder: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(Header);

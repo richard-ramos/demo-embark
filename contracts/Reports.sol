@@ -1,5 +1,6 @@
 pragma solidity ^0.4.24;
 
+// @notice Contract to create whisteblowing reports
 contract ReportManager {
 
     enum Ballot { NONE, UPVOTE, DOWNVOTE }
@@ -26,6 +27,8 @@ contract ReportManager {
         uint8 vote
     );
 
+    // @notice Number of reports created
+    // @return Num of reports
     function numReports()
         public
         view
@@ -34,11 +37,14 @@ contract ReportManager {
         return reports.length;
     }
 
+    // @notice Create report
+    // @param _description IPFS hash of the content of the report
     function create(bytes _description)
         public
     {
         uint reportId = reports.length++;
         reports[reportId] = Report({
+            /* solium-disable-next-line */
             creationDate: block.timestamp,
             description: _description,
             owner: msg.sender,
@@ -49,6 +55,9 @@ contract ReportManager {
         emit NewReport(reportId, _description);
     }
 
+    // @notice Vote on a report
+    // @param _reportId Id of the report to up/downvote
+    // @param _vote Vote selection: 0 -> none, 1 -> upvote, 2 -> downvote
     function vote(uint _reportId, uint8 _vote)
         public
     {
@@ -70,6 +79,9 @@ contract ReportManager {
         emit Vote(_reportId, msg.sender, _vote);
     }
 
+    // @notice Determine if the sender can vote on a report
+    // @param _reportId Id of the report
+    // @return bool that indicates if the sender can vote or not
     function canVote(uint _reportId)
         public
         view
@@ -80,6 +92,9 @@ contract ReportManager {
         return (r.creationDate != 0 && r.voters[msg.sender] == Ballot.NONE);
     }
 
+    // @notice Obtain vote for specific report
+    // @param _reportId Id of the report
+    // @return uint that represents the vote: 0 -> none, 1 -> upvote, 2 -> downvote
     function getVote(uint _reportId)
         public
         view
