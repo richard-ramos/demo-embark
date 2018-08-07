@@ -17,12 +17,13 @@ contract ReportManager {
     Report[] public reports;
 
     event NewReport(
-        uint indexed pollId,
+        uint indexed reportId,
+        address owner,
         bytes description
     );
 
     event Vote(
-        uint indexed pollId,
+        uint indexed reportId,
         address voter,
         uint8 vote
     );
@@ -52,7 +53,7 @@ contract ReportManager {
             downvotes: 0
         });
 
-        emit NewReport(reportId, _description);
+        emit NewReport(reportId, msg.sender, _description);
     }
 
     // @notice Vote on a report
@@ -87,6 +88,8 @@ contract ReportManager {
         view
         returns (bool)
     {
+        if(_reportId > reports.length - 1) return false;
+        
         Report storage r = reports[_reportId];
         
         return (r.creationDate != 0 && r.voters[msg.sender] == Ballot.NONE);
