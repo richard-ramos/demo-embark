@@ -1,11 +1,11 @@
 pragma solidity ^0.4.24;
 
-// @notice Contract to create whisteblower leaks
-contract ELeaks {
+// @notice Contract to create blog posts
+contract EtherPress {
 
     enum Ballot { NONE, UPVOTE, DOWNVOTE }
 
-    struct Leak {
+    struct Post {
         uint creationDate;   
         bytes description;   
         address owner;
@@ -14,66 +14,69 @@ contract ELeaks {
         mapping(address => Ballot) voters;
     }
 
-    Leak[] public leaks;
+    Post[] public posts;
 
-    event NewLeak (
-        uint indexed leakId,
+    event NewPost (
+        uint indexed postId,
         address owner,
         bytes description
     );
 
     event Vote(
-        uint indexed leakId,
+        uint indexed postId,
         address voter,
         uint8 vote
     );
 
-    // @notice Number of leaks created
-    // @return Num of leaks
-    function num()
+    // @notice Number of posts created
+    // @return Num of posts
+    function numPosts()
         public
         view
         returns(uint)
     {
+        // TODO: 
         return 1;
     }
 
-    // @notice Create Leak
-    // @param _description IPFS hash of the content of the leak
+    // @notice Create Post
+    // @param _description IPFS hash of the content of the post
     function create(bytes _description)
         public
     {
-        // TODO:
+        // TODO: 
     }
 
-    // @notice Vote on a leak
-    // @param _leakId Id of the report to up/downvote
+    // @notice Vote on a post
+    // @param _postId Id of the post to up/downvote
     // @param _vote Vote selection: 0 -> none, 1 -> upvote, 2 -> downvote
-    function vote(uint _leakId, uint8 _vote)
+    function vote(uint _postId, uint8 _vote)
         public
     {
         // TODO:
     }
 
-    // @notice Determine if the sender can vote on a leak
-    // @param _leakId Id of the report
+    // @notice Determine if the sender can vote on a post
+    // @param _postId Id of the post
     // @return bool that indicates if the sender can vote or not
-    function canVote(uint _leakId)
+    function canVote(uint _postId)
         public
         view
         returns (bool)
     {
         // TODO:
+        return true;
     }
 
-    // @notice Obtain vote for specific report
-    // @param _leakId Id of the report
+    // @notice Obtain vote for specific post
+    // @param _postId Id of the post
     // @return uint that represents the vote: 0 -> none, 1 -> upvote, 2 -> downvote
-    function getVote(uint _leakId)
+    function getVote(uint _postId)
         public
         view
         returns (uint8)
     {
+        // TODO:
         return 1;
     }
 
