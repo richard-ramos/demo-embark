@@ -1,9 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import Create from './Create';
-import ELeaks from 'Embark/contracts/ELeaks';
 import EmbarkJS from 'Embark/EmbarkJS';
+import EtherPress from 'Embark/contracts/EtherPress';
 import Header from './Header';
-import Leak from './Leak';
+import Post from './Post';
 import _ from 'lodash';
 
 class App extends Component {
@@ -21,7 +21,7 @@ class App extends Component {
 
   componentDidMount() {
     EmbarkJS.onReady(() => {
-      this._loadReports();
+      this._loadPosts();
     });
   }
 
@@ -34,14 +34,14 @@ class App extends Component {
     this.setState({sortBy, sortOrder});
   }
 
-  _loadReports = async () => {
-    const {leaks, num} = ELeaks.methods;
+  _loadPosts = async () => {
+    const {posts, numPosts} = EtherPress.methods;
     let list = [];
-    const total = await num().call();
+    const total = await numPosts().call();
     if(total > 0){
         for (let i = 0; i < total; i++) {
-            const leak = leaks(i).call();
-            list.push(leak);
+            const post = posts(i).call();
+            list.push(post);
         }
 
         list = await Promise.all(list);
@@ -67,8 +67,8 @@ class App extends Component {
 
     return (<Fragment>
         <Header toggleForm={this._toggleForm} sortOrder={this._setSortOrder} />
-        { displayForm && <Create afterPublish={this._loadLeaks} /> }
-        { orderedList.map((record) => <Leak key={record.id} {...record} />) }
+        { displayForm && <Create afterPublish={this._loadPosts} /> }
+        { orderedList.map((record) => <Post key={record.id} {...record} />) }
         </Fragment>
     );
   }

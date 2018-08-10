@@ -3,8 +3,8 @@ import React, {Component} from 'react';
 import Blockies from 'react-blockies';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DownvoteIcon from '@material-ui/icons/ExpandMore';
-import ELeaks from 'Embark/contracts/ELeaks';
 import EmbarkJS from 'Embark/EmbarkJS';
+import EtherPress from 'Embark/contracts/EtherPress';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
@@ -43,7 +43,7 @@ const ballot = {
     DOWNVOTE: 2
 };
 
-class Leak extends Component {
+class Post extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -73,7 +73,7 @@ class Leak extends Component {
             this.setState({title, content});
         });
 
-        const {canVote, getVote} = ELeaks.methods;
+        const {canVote, getVote} = EtherPress.methods;
 
         canVote(this.props.id).call().then((canVote) => {
             this.setState({canVote});
@@ -89,7 +89,7 @@ class Leak extends Component {
 
         this.setState({isSubmitting: true});
 
-        const {vote} = ELeaks.methods;
+        const {vote} = EtherPress.methods;
         let toSend = vote(this.props.id, choice);
         
         toSend.estimateGas()
@@ -151,7 +151,7 @@ class Leak extends Component {
     }
 }
 
-Leak.propTypes = {
+Post.propTypes = {
     upvotes: PropTypes.number.isRequired,
     downvotes: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired,
@@ -162,4 +162,4 @@ Leak.propTypes = {
   };
   
 
-export default withStyles(styles)(Leak);
+export default withStyles(styles)(Post);
