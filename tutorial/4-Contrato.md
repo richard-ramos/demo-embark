@@ -1,16 +1,16 @@
 ## Coding: Nuestro contrato
-Empezaremos por modificar `./contracts/ReportManager.sol` y ver como Embark recompila todo por nosotros mientras realizamos cambios.
+Empezaremos por modificar `./contracts/ELeaks.sol` y ver como Embark recompila todo por nosotros mientras realizamos cambios.
 
 ### Funciones
 Empecemos por escribir funciones para nuestro contrato:
 
 #### Crear un reporte
-La funcion `create` sera utilizada para crear nuestros reportes. Necesitamos agregar un nuevo reporte al arreglo `reports[]` y emitir un evento indicando que un nuevo reporte fue creado.
+La funcion `create` sera utilizada para crear nuestros reportes. Necesitamos agregar un nuevo reporte al arreglo `leaks[]` y emitir un evento indicando que un nuevo reporte fue creado.
 
-1. Agregamos el reporte, populando sus detalles. Para la fecha de creacion usa `block.timestamp`
+1. Agregamos el reporte, ingresando sus detalles. Para la fecha de creacion usa `block.timestamp`
     ```
-    uint reportId = reports.length++;
-    reports[reportId] = Report({
+    uint leakId = leaks.length++;
+    leaks[leakId] = Leak({
         creationDate: block.timestamp,
         description: _description,
         owner: msg.sender,
@@ -20,7 +20,7 @@ La funcion `create` sera utilizada para crear nuestros reportes. Necesitamos agr
     ```
 2. Generamos un evento
     ```
-    emit NewReport(reportId, msg.sender, _description);
+    emit NewLeak(leakId, msg.sender, _description);
     ```
 
 #### Votar por un reporte
@@ -28,25 +28,25 @@ Queremos poder asignarle una puntuación a nuestro reporte. Para eso, trabajemos
 
 1. Determinemos si el reporte existe y si ya hemos votado anteriormente
 ```
-Report storage r = reports[_reportId];
-require(r.creationDate != 0, "Report does not exist");
-require(r.voters[msg.sender] == Ballot.NONE, "You already voted on this report");
+Leak storage l = leaks[_leakId];
+require(l.creationDate != 0, "Report does not exist");
+require(l.voters[msg.sender] == Ballot.NONE, "You already voted on this report");
 ```
 
 2. Guardemos nuestro voto y actualicemos el score del registro
 ```
 Ballot b = Ballot(_vote);
 if (b == Ballot.UPVOTE) {
-    r.upvotes++;
+    l.upvotes++;
 } else {
-    r.downvotes++;
+    l.downvotes++;
 }
-r.voters[msg.sender] = b;
+l.voters[msg.sender] = b;
 ```
 
 3. Generemos un evento
 ````
-emit Vote(_reportId, msg.sender, _vote);
+emit Vote(_leakId, msg.sender, _vote);
 ````
 
 #### Determinar si podemos votar en un reporte
@@ -54,19 +54,19 @@ Necesitamos poder indicarle a los usuarios si ellos pueden votar o no por un rep
 
 1. Podemos determinar si el reporte existe si el Id del mismo es valido
 ```
-if(_reportId > reports.length - 1) return false;
+if(_leakId > leaks.length - 1) return false;
 ```
 
 2. Si el reporte existe, es cuestion de ver la dirección que invoca el contrato ya votó
 ```    
-Report storage r = reports[_reportId];    
-return (r.voters[msg.sender] == Ballot.NONE);
+Leak storage l = leaks[_leakId];    
+return (l.voters[msg.sender] == Ballot.NONE);
 ```
 
 #### Determinar cual fue nuestro voto
 En caso de que el usuario ya haya votado, es posible que tenga interes en saber cual fue su decisión. Implementemos esto en `getVote`.
 ```
-Report storage r = reports[_reportId];
-return uint8(r.voters[msg.sender]);
+Leak storage l = leaks[_leakId];
+return uint8(l.voters[msg.sender]);
 ```
 > Observa que en las ultimas dos funciones los valores de entrada y salida relacionados con el voto son uint8 en vez de un enum. Esto se debe a que web3js no soporta aun el uso de enums.
