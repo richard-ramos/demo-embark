@@ -1,18 +1,18 @@
 
 // our contract object to test
-const ELeaks = require('Embark/contracts/ELeaks');
+const EtherPress = require('Embark/contracts/EtherPress');
 
 // contract methods we'll be testing
-const {num, create, vote, leaks, canVote, getVote} = ELeaks.methods;
+const {numPosts, create, vote, posts, canVote, getVote} = EtherPress.methods;
 
 // variables that will be updated in the tests
 let accounts;
-let leakId;
+let postId;
 
 // set up our config test parameters
 config({
   contracts: {
-    ELeaks: {
+    EtherPress: {
       // would pass constructor args here if needed
     }
   }
@@ -26,30 +26,30 @@ const ipfsHash = 'Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z';
 
 // Embark exposes a global contract method as an alias
 // for Mocha.describe
-contract("ELeaks contract", function () {
+contract("EtherPress contract", function () {
   this.timeout(0);
 
-  it("should be able to create a leak and receive it via contract event", async function () {    
+  it("should be able to create a post and receive it via contract event", async function () {    
     
   });
 
-  it("should return 1 leak", async function () {
+  it("should return 1 post", async function () {
     
   });
 
-  it("leak should have correct data", async function (){
+  it("post should have correct data", async function (){
     
   });
 
-  it("should not be able to vote in an unexisting leak report", async function () {
+  it("should not be able to vote in an unexisting post", async function () {
     
   });
 
-  it("should be able to vote in a leak if account hasn't voted before", async function () {
+  it("should be able to vote in a post if account hasn't voted before", async function () {
     
   });
 
-  it("should be able to vote in a leak", async function () {
+  it("should be able to vote in a post", async function () {
     
   });
 

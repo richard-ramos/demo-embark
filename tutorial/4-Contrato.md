@@ -1,72 +1,72 @@
 ## Coding: Nuestro contrato
-Empezaremos por modificar `./contracts/ELeaks.sol` y ver como Embark recompila todo por nosotros mientras realizamos cambios.
+Empezaremos por modificar `./contracts/EtherPress.sol` y ver como Embark recompila todo por nosotros mientras realizamos cambios.
 
 ### Funciones
 Empecemos por escribir funciones para nuestro contrato:
 
-#### Crear un reporte
-La funcion `create` sera utilizada para crear nuestros reportes. Necesitamos agregar un nuevo reporte al arreglo `leaks[]` y emitir un evento indicando que un nuevo reporte fue creado.
+#### Crear un artículo
+La funcion `create` sera utilizada para crear nuestros artículos. Necesitamos agregar un nuevo post al arreglo `posts[]` y emitir un evento indicando que un nuevo artículo fue creado.
 
-1. Agregamos el reporte, ingresando sus detalles. Para la fecha de creacion usa `block.timestamp`
-    ```
-    uint leakId = leaks.length++;
-    leaks[leakId] = Leak({
-        creationDate: block.timestamp,
-        description: _description,
-        owner: msg.sender,
-        upvotes: 0,
-        downvotes: 0
-    });
-    ```
+1. Agregamos un `Post` al arreglo, ingresando sus detalles. Para la fecha de creacion usa `block.timestamp`
+```
+uint postId = posts.length++;
+posts[postId] = Post({
+    creationDate: block.timestamp,
+    description: _description,
+    owner: msg.sender,
+    upvotes: 0,
+    downvotes: 0
+});
+```
 2. Generamos un evento
-    ```
-    emit NewLeak(leakId, msg.sender, _description);
-    ```
-
-#### Votar por un reporte
-Queremos poder asignarle una puntuación a nuestro reporte. Para eso, trabajemos en la funcion `vote()` donde los usuarios podran sumar o restar puntos a cada registro. NOTA: este sistema de puntuación es muy inocente y no recomendado para usarse en la vida real.
-
-1. Determinemos si el reporte existe y si ya hemos votado anteriormente
 ```
-Leak storage l = leaks[_leakId];
-require(l.creationDate != 0, "Report does not exist");
-require(l.voters[msg.sender] == Ballot.NONE, "You already voted on this report");
+emit NewPost(postId, msg.sender, _description);
 ```
 
-2. Guardemos nuestro voto y actualicemos el score del registro
+#### Votar por un artículo
+Queremos poder asignarle una puntuación a nuestro artículo. Para eso, trabajemos en la funcion `vote()` donde los usuarios podran sumar o restar puntos a cada registro. NOTA: este sistema de puntuación es muy inocente y no recomendado para usarse en la vida real.
+
+1. Determinemos si el artículo existe y si ya hemos votado anteriormente
+```
+Post storage p = posts[_postId];
+require(p.creationDate != 0, "Post does not exist");
+require(p.voters[msg.sender] == Ballot.NONE, "You already voted on this post");
+```
+
+2. Guardemos nuestro voto y actualicemos el score del artículo
 ```
 Ballot b = Ballot(_vote);
 if (b == Ballot.UPVOTE) {
-    l.upvotes++;
+    p.upvotes++;
 } else {
-    l.downvotes++;
+    p.downvotes++;
 }
 l.voters[msg.sender] = b;
 ```
 
 3. Generemos un evento
 ````
-emit Vote(_leakId, msg.sender, _vote);
+emit Vote(_postId, msg.sender, _vote);
 ````
 
-#### Determinar si podemos votar en un reporte
-Necesitamos poder indicarle a los usuarios si ellos pueden votar o no por un reporte. Hay dos escenarios en los cuales un usuario no puede votar: a) El reporte no existe, y b) Ya se votó anteriormente. Trabajemos en la funcion `canVote`
+#### Determinar si podemos votar en un artículo
+Necesitamos poder indicarle a los usuarios si ellos pueden votar o no por un artículo. Hay dos escenarios en los cuales un usuario no puede votar: a) El artículo no existe, y b) Ya se votó anteriormente. Trabajemos en la funcion `canVote`
 
-1. Podemos determinar si el reporte existe si el Id del mismo es valido
+1. Podemos determinar si el artículo existe si el Id del mismo es valido
 ```
-if(_leakId > leaks.length - 1) return false;
+if(_postId > posts.length - 1) return false;
 ```
 
-2. Si el reporte existe, es cuestion de ver la dirección que invoca el contrato ya votó
+2. Si el artículo existe, es cuestion de ver la dirección que invoca el contrato ya votó
 ```    
-Leak storage l = leaks[_leakId];    
-return (l.voters[msg.sender] == Ballot.NONE);
+Post storage p = posts[_postId];    
+return (p.voters[msg.sender] == Ballot.NONE);
 ```
 
 #### Determinar cual fue nuestro voto
-En caso de que el usuario ya haya votado, es posible que tenga interes en saber cual fue su decisión. Implementemos esto en `getVote`.
+En caso de que el usuario ya haya votado, es posible que tenga interés en saber cual fue su decisión. Implementemos esto en `getVote`.
 ```
-Leak storage l = leaks[_leakId];
-return uint8(l.voters[msg.sender]);
+Post storage p = posts[_postId];
+return uint8(p.voters[msg.sender]);
 ```
 > Observa que en las ultimas dos funciones los valores de entrada y salida relacionados con el voto son uint8 en vez de un enum. Esto se debe a que web3js no soporta aun el uso de enums.
