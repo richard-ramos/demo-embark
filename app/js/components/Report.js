@@ -1,9 +1,7 @@
+import {Card, CardActions, CardContent, CardHeader} from '@material-ui/core';
 import React, {Component} from 'react';
 import Blockies from 'react-blockies';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
+import Button from '@material-ui/core/Button';
 import DownvoteIcon from '@material-ui/icons/ExpandMore';
 import EmbarkJS from 'Embark/EmbarkJS';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,9 +11,11 @@ import ReportManager from 'Embark/contracts/ReportManager';
 import Typography from '@material-ui/core/Typography';
 import UpvoteIcon from '@material-ui/icons/ExpandLess';
 import dateformat from 'dateformat';
+import markdownJS from "markdown";
 import web3 from 'Embark/web3';
 import {withStyles} from '@material-ui/core/styles';
 
+const markdown = markdownJS.markdown;
 const styles = theme => ({
     actions: {
       marginRight: theme.spacing.unit * 5,
@@ -25,8 +25,9 @@ const styles = theme => ({
     card: {
       margin: theme.spacing.unit * 3
     },
-    content: {
-        fontSize: 18
+    title: {
+        borderBottom: '1px solid #ccc',
+        color: '#666'
     }
 });  
 
@@ -40,6 +41,7 @@ class Report extends Component {
     constructor(props){
         super(props);
         this.state = {
+            title: '',
             content: '',
             isSubmitting: false,
             canVote: true,
@@ -58,8 +60,11 @@ class Report extends Component {
     _loadAttributes = () => {
         const ipfsHash = web3.utils.toAscii(this.props.description);
         EmbarkJS.Storage.get(ipfsHash)
-        .then(content => {
-            this.setState({content});
+        .then(ipfsText => {
+            const jsonContent = JSON.parse(ipfsText);
+            const title = jsonContent.title;
+            const content = jsonContent.content;
+            this.setState({title, content});
         });
 
         const {canVote, getVote} = ReportManager.methods;
@@ -103,10 +108,11 @@ class Report extends Component {
     }
 
     render(){
-        const {content, upvotes, downvotes} = this.state;
+        const {title, content, upvotes, downvotes} = this.state;
         const {creationDate, classes, owner} = this.props;
         const disabled = this.state.isSubmitting || !this.state.canVote;
         const formattedDate = dateformat(new Date(creationDate * 1000), "dddd, mmmm dS, yyyy, h:MM:ss TT");
+        const mdText = markdown.toHTML(content);
 
         return <Card className={classes.card}>
             <CardHeader title={owner} subheader={formattedDate}
@@ -119,9 +125,10 @@ class Report extends Component {
                 </IconButton>
               } />
             <CardContent>
-                <Typography component="pre" className={classes.content}>
-                    {content}
+                <Typography variant="title"  className={classes.title}  gutterBottom>
+                {title}
                 </Typography>
+                <Typography component="div" dangerouslySetInnerHTML={{__html: mdText}} />
             </CardContent>
             <CardActions disableActionSpacing>
             <IconButton className={classes.actions} disabled={disabled} onClick={this._vote(ballot.UPVOTE)}>
