@@ -2,10 +2,10 @@ import React, {Component, Fragment} from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import ELeaks from 'Embark/contracts/ELeaks';
 import EmbarkJS from 'Embark/EmbarkJS';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import PropTypes from 'prop-types';
-import ReportManager from 'Embark/contracts/ReportManager';
 import TextField from '@material-ui/core/TextField';
 import web3 from 'Embark/web3';
 import {withStyles} from '@material-ui/core/styles';
@@ -42,7 +42,7 @@ class Create extends Component{
       'error': ''
     });
 
-    const {create} = ReportManager.methods;
+    const {create} = ELeaks.methods;
     
     let toSend;
 
@@ -57,7 +57,8 @@ class Create extends Component{
       return toSend.estimateGas();
     })
     .then(estimatedGas => {
-      return toSend.send({gas: estimatedGas + 1000});
+      return toSend.send({from: web3.eth.defaultAccount, 
+                          gas: estimatedGas + 1000});
     })
     .then(receipt => {
       console.log(receipt);

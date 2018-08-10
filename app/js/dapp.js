@@ -1,10 +1,10 @@
 import App from './components/App';
+import ELeaks from 'Embark/contracts/ELeaks';
 import EmbarkJS from 'Embark/EmbarkJS';
 import React from 'react';
-import ReportManager from 'Embark/contracts/ReportManager';
 import {render} from 'react-dom';
 
 window.EmbarkJS = EmbarkJS;
-window.ReportManager = ReportManager;
+window.ELeaks = ELeaks;
 
 render(<App />, document.getElementById('root'));

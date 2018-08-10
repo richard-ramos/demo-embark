@@ -1,9 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import Create from './Create';
+import ELeaks from 'Embark/contracts/ELeaks';
 import EmbarkJS from 'Embark/EmbarkJS';
 import Header from './Header';
-import Report from './Report';
-import ReportManager from 'Embark/contracts/ReportManager';
+import Leak from './Leak';
 import _ from 'lodash';
 
 class App extends Component {
@@ -35,13 +35,13 @@ class App extends Component {
   }
 
   _loadReports = async () => {
-    const {reports, numReports} = ReportManager.methods;
+    const {leaks, num} = ELeaks.methods;
     let list = [];
-    const total = await numReports().call();
+    const total = await num().call();
     if(total > 0){
         for (let i = 0; i < total; i++) {
-            const report = reports(i).call();
-            list.push(report);
+            const leak = leaks(i).call();
+            list.push(leak);
         }
 
         list = await Promise.all(list);
@@ -67,8 +67,8 @@ class App extends Component {
 
     return (<Fragment>
         <Header toggleForm={this._toggleForm} sortOrder={this._setSortOrder} />
-        { displayForm && <Create afterPublish={this._loadReports} /> }
-        { orderedList.map((record) => <Report key={record.id} {...record} />) }
+        { displayForm && <Create afterPublish={this._loadLeaks} /> }
+        { orderedList.map((record) => <Leak key={record.id} {...record} />) }
         </Fragment>
     );
   }

@@ -58,7 +58,7 @@ class Header extends Component {
           <AppBar position="fixed">
             <Toolbar className={classes.toolBar}>
               <Typography variant="display1" color="inherit" className={classes.flex}>
-                Etherleaks
+              Ξleaks
               </Typography>
               <Button color="inherit" onClick={toggleForm}>
                 <AddIcon />

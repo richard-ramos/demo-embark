@@ -1,13 +1,13 @@
 import {Card, CardActions, CardContent, CardHeader} from '@material-ui/core';
 import React, {Component} from 'react';
 import Blockies from 'react-blockies';
-import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import DownvoteIcon from '@material-ui/icons/ExpandMore';
+import ELeaks from 'Embark/contracts/ELeaks';
 import EmbarkJS from 'Embark/EmbarkJS';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
-import ReportManager from 'Embark/contracts/ReportManager';
 import Typography from '@material-ui/core/Typography';
 import UpvoteIcon from '@material-ui/icons/ExpandLess';
 import dateformat from 'dateformat';
@@ -23,11 +23,17 @@ const styles = theme => ({
       display: 'flex'
     },
     card: {
-      margin: theme.spacing.unit * 3
+      margin: theme.spacing.unit * 2,
+      marginTop: theme.spacing.unit * 4,
+      position: 'relative'
     },
     title: {
         borderBottom: '1px solid #ccc',
         color: '#666'
+    },
+    spinner: {
+        position: 'absolute',
+        right: theme.spacing.unit * 3
     }
 });  
 
@@ -37,7 +43,7 @@ const ballot = {
     DOWNVOTE: 2
 };
 
-class Report extends Component {
+class Leak extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -67,7 +73,7 @@ class Report extends Component {
             this.setState({title, content});
         });
 
-        const {canVote, getVote} = ReportManager.methods;
+        const {canVote, getVote} = ELeaks.methods;
 
         canVote(this.props.id).call().then((canVote) => {
             this.setState({canVote});
@@ -83,7 +89,7 @@ class Report extends Component {
 
         this.setState({isSubmitting: true});
 
-        const {vote} = ReportManager.methods;
+        const {vote} = ELeaks.methods;
         let toSend = vote(this.props.id, choice);
         
         toSend.estimateGas()
@@ -108,16 +114,16 @@ class Report extends Component {
     }
 
     render(){
-        const {title, content, upvotes, downvotes} = this.state;
+        const {title, content, upvotes, downvotes, isSubmitting, canVote} = this.state;
         const {creationDate, classes, owner} = this.props;
-        const disabled = this.state.isSubmitting || !this.state.canVote;
-        const formattedDate = dateformat(new Date(creationDate * 1000), "dddd, mmmm dS, yyyy, h:MM:ss TT");
+        const disabled = isSubmitting || !canVote;
+        const formattedDate = dateformat(new Date(creationDate * 1000), "yyyy-mm-dd HH:MM:ss");
         const mdText = markdown.toHTML(content);
 
         return <Card className={classes.card}>
             <CardHeader title={owner} subheader={formattedDate}
                 avatar={
-                    <Blockies seed={owner} size={8} scale={6} />
+                    <Blockies seed={owner} size={7} scale={5} />
                 }
                 action={
                 <IconButton>
@@ -131,20 +137,21 @@ class Report extends Component {
                 <Typography component="div" dangerouslySetInnerHTML={{__html: mdText}} />
             </CardContent>
             <CardActions disableActionSpacing>
-            <IconButton className={classes.actions} disabled={disabled} onClick={this._vote(ballot.UPVOTE)}>
-              <UpvoteIcon />
-              {upvotes}
-            </IconButton>
-            <IconButton className={classes.actions} disabled={disabled} onClick={this._vote(ballot.DOWNVOTE)}>
-              <DownvoteIcon />
-              {downvotes}
-            </IconButton>
+                <IconButton className={classes.actions} disabled={disabled} onClick={this._vote(ballot.UPVOTE)}>
+                <UpvoteIcon />
+                {upvotes}
+                </IconButton>
+                <IconButton className={classes.actions} disabled={disabled} onClick={this._vote(ballot.DOWNVOTE)}>
+                <DownvoteIcon />
+                {downvotes}
+                </IconButton>
+                { isSubmitting && <CircularProgress size={14} className={classes.spinner} /> }
           </CardActions>
         </Card>;
     }
 }
 
-Report.propTypes = {
+Leak.propTypes = {
     upvotes: PropTypes.number.isRequired,
     downvotes: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired,
@@ -155,4 +162,4 @@ Report.propTypes = {
   };
   
 
-export default withStyles(styles)(Report);
+export default withStyles(styles)(Leak);
