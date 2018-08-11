@@ -12,7 +12,12 @@ import dateformat from 'dateformat';
 import markdownJS from "markdown";
 import {withStyles} from '@material-ui/core/styles';
 
+// TODO: importar embark/EmbarkJS
+// TODO: importar embark/web3
+// TODO: importar embark/contracts/EtherPress
+
 const markdown = markdownJS.markdown;
+
 const styles = theme => ({
     actions: {
       marginRight: theme.spacing.unit * 5,
@@ -56,11 +61,13 @@ class Post extends Component {
     }
 
     componentDidMount(){
+        // TODO: buscar atributos del post cuando Embark termine de cargar
         this._loadAttributes();
     }
 
     _loadAttributes = () => {
-
+        // TODO: Embark debe obtener el contenido de IPFS, usando this.props.description
+        // TODO: Determinar si msg.sender puede votar o no
         this.setState({
             title: "Tres leyes de la robótica",
             content: "Un robot no hará daño a un ser humano o, por inacción, permitir que un ser humano sufra daño.\nUn robot debe cumplir las órdenes dadas por los seres humanos, a excepción de aquellas que entrasen en conflicto con la primera ley.\nUn robot debe proteger su propia existencia en la medida en que esta protección no entre en conflicto con la primera o con la segunda ley",
@@ -72,12 +79,14 @@ class Post extends Component {
         event.preventDefault();
         this.setState({isSubmitting: true});
 
+        // TODO: Llamar al contrato a la funcion vote. Luego de obtener el receipt ejecutar esto:
         this.setState({
             canVote: false,
             upvotes: this.state.upvotes + (choice == ballot.UPVOTE ? 1 : 0),
             downvotes: this.state.downvotes + (choice == ballot.DOWNVOTE ? 1 : 0)
         });
 
+        // TODO: finalmente remover el estado de submission
         this.setState({isSubmitting: false});
     }
 
