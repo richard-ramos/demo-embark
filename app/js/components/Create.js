@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField';
 import web3 from 'Embark/web3';
 import {withStyles} from '@material-ui/core/styles';
 
-
 const styles = theme => ({
   textField: {
     marginRight: theme.spacing.unit * 2
@@ -21,6 +20,7 @@ class Create extends Component{
 
   constructor(props){
     super(props);
+    
     this.state = {
       'title': '',
       'content': '',

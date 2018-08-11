@@ -52,6 +52,7 @@ class App extends Component {
                       return value; 
                     });
     }
+    
     this.setState({list});
   }
 

@@ -44,8 +44,10 @@ const ballot = {
 };
 
 class Post extends Component {
+
     constructor(props){
         super(props);
+
         this.state = {
             title: '',
             content: '',
@@ -149,6 +151,7 @@ class Post extends Component {
           </CardActions>
         </Card>;
     }
+    
 }
 
 Post.propTypes = {
