@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
+import SearchBar from 'material-ui-search-bar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
@@ -57,9 +59,18 @@ class Header extends Component {
         <div className={classes.root} >
           <AppBar position="fixed">
             <Toolbar className={classes.toolBar}>
-              <Typography variant="display1" color="inherit" className={classes.flex}>
-              EtherprΞss
-              </Typography>
+              <Hidden smDown>
+                <Typography variant="display1" color="inherit" className={classes.flex}>
+                Ξtherpress
+                </Typography>
+              </Hidden>
+              <SearchBar
+                hintText="Buscar..."
+                style={{
+                  margin: '10px 30px',
+                  maxWidth: 300
+                }}
+              />
               <Button color="inherit" onClick={toggleForm}>
                 <AddIcon />
               </Button>
