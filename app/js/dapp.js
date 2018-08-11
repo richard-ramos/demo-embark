@@ -1,10 +1,10 @@
 import App from './components/App';
 import EmbarkJS from 'Embark/EmbarkJS';
 import React from 'react';
-import ReportManager from 'Embark/contracts/ReportManager';
+import EtherPress from 'Embark/contracts/EtherPress';
 import {render} from 'react-dom';
 
 window.EmbarkJS = EmbarkJS;
-window.ReportManager = ReportManager;
+window.EtherPress = EtherPress;
 
 render(<App />, document.getElementById('root'));

@@ -70,7 +70,10 @@ class Post extends Component {
         // TODO: Determinar si msg.sender puede votar o no
         this.setState({
             title: "Tres leyes de la robótica",
-            content: "Un robot no hará daño a un ser humano o, por inacción, permitir que un ser humano sufra daño.\nUn robot debe cumplir las órdenes dadas por los seres humanos, a excepción de aquellas que entrasen en conflicto con la primera ley.\nUn robot debe proteger su propia existencia en la medida en que esta protección no entre en conflicto con la primera o con la segunda ley",
+            content: `1. Un robot no hará daño a un ser humano o, por inacción, permitir que un ser humano sufra daño.\n
+2. Un robot debe cumplir las órdenes dadas por los seres humanos, a excepción de aquellas que entrasen en conflicto con la primera ley.\n
+3. Un robot debe proteger su propia existencia en la medida en que esta protección no entre en conflicto con la primera o con la segunda ley\n
+Isaac Asimov`,
             canVote: true
         });
     }

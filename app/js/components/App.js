@@ -1,10 +1,11 @@
 import React, {Component, Fragment} from 'react';
 import Create from './Create';
-import EmbarkJS from 'Embark/EmbarkJS';
 import Header from './Header';
-import Report from './Report';
-import ReportManager from 'Embark/contracts/ReportManager';
+import Post from './Post';
 import _ from 'lodash';
+
+// TODO: importar embark/EmbarkJS
+// TODO: importar embark/contracts/EtherPress
 
 class App extends Component {
 
@@ -20,9 +21,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    EmbarkJS.onReady(() => {
-      this._loadReports();
-    });
+    // TODO: cargar los posts cuando Embark este listo
+    this._loadPosts();
   }
 
   _toggleForm = () => {
@@ -34,14 +34,18 @@ class App extends Component {
     this.setState({sortBy, sortOrder});
   }
 
-  _loadReports = async () => {
-    const {reports, numReports} = ReportManager.methods;
+  _loadPosts = async () => {
+    // TODO: Usando las funciones posts y numPosts del contrato,
+    //       cargar todos los posts
     let list = [];
-    const total = await numReports().call();
+
+    const total = 1; // TODO:
     if(total > 0){
         for (let i = 0; i < total; i++) {
-            const report = reports(i).call();
-            list.push(report);
+            const post = {
+              upvotes: 0, downvotes: 0, owner: "0x1234567890123456789012345678901234567890", creationDate: "153399", description: "0x00"
+            }; // TODO: esto debe venir del contrato
+            list.push(post);
         }
 
         list = await Promise.all(list);
@@ -52,6 +56,7 @@ class App extends Component {
                       return value; 
                     });
     }
+    
     this.setState({list});
   }
 
@@ -67,8 +72,8 @@ class App extends Component {
 
     return (<Fragment>
         <Header toggleForm={this._toggleForm} sortOrder={this._setSortOrder} />
-        { displayForm && <Create afterPublish={this._loadReports} /> }
-        { orderedList.map((record) => <Report key={record.id} {...record} />) }
+        { displayForm && <Create afterPublish={this._loadPosts} /> }
+        { orderedList.map((record) => <Post key={record.id} {...record} />) }
         </Fragment>
     );
   }
