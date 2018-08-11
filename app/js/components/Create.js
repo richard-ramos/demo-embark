@@ -2,14 +2,14 @@ import React, {Component, Fragment} from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import EmbarkJS from 'Embark/EmbarkJS';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import PropTypes from 'prop-types';
-import ReportManager from 'Embark/contracts/ReportManager';
 import TextField from '@material-ui/core/TextField';
-import web3 from 'Embark/web3';
 import {withStyles} from '@material-ui/core/styles';
 
+// TODO: importar embark/EmbarkJS
+// TODO: importar embark/web3
+// TODO: importar embark/contracts/EtherPress
 
 const styles = theme => ({
   textField: {
@@ -21,9 +21,10 @@ class Create extends Component{
 
   constructor(props){
     super(props);
+    
     this.state = {
-      'text': '',
       'title': '',
+      'content': '',
       'isSubmitting': false,
       'error': ''
     };
@@ -32,46 +33,31 @@ class Create extends Component{
   handleClick = event => {
     event.preventDefault();
 
-    if(this.state.text.trim() == ''){
+    if(this.state.title.trim() == ''){
       this.setState({'error': 'Campo Requerido'});
       return;
     }
 
     this.setState({
       isSubmitting: true, 
-      'error': ''
+      error: ''
     });
 
-    const {create} = ReportManager.methods;
-    
-    let toSend;
-
+    // TODO: Guardar este objeto en IPFS
     const textToSave = {
       'title': this.state.title,
-      'content': this.state.text
+      'content': this.state.content
     };
 
-    EmbarkJS.Storage.saveText(JSON.stringify(textToSave))
-    .then(ipfsHash => {
-      toSend = create(web3.utils.toHex(ipfsHash));
-      return toSend.estimateGas();
-    })
-    .then(estimatedGas => {
-      return toSend.send({gas: estimatedGas + 1000});
-    })
-    .then(receipt => {
-      console.log(receipt);
-      this.setState({
-        text: ''
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-    })
-    .finally(() => {
-      this.setState({isSubmitting: false});
-      this.props.afterPublish();
+    // TODO: Despues de guardar el texto en IPFS, vaciar los campos
+    this.setState({
+      content: '',
+      title: ''
     });
+
+    // TODO: Finalmente actualizar el listado de articulos
+    this.setState({isSubmitting: false});
+    this.props.afterPublish();
   }
 
   handleChange = name => event => {
@@ -82,7 +68,7 @@ class Create extends Component{
 
   render(){
     const {classes} = this.props;
-    const {error, text, title, isSubmitting} = this.state;
+    const {error, content, title, isSubmitting} = this.state;
 
     return (<Fragment>
       <Card>
@@ -106,9 +92,9 @@ class Create extends Component{
             multiline
             rowsMax="20"
             fullWidth
-            value={text}
+            value={content}
             helperText={error}
-            onChange={this.handleChange('text')}
+            onChange={this.handleChange('content')}
             className={classes.textField}
             margin="normal" />
           {
