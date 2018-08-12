@@ -65,10 +65,10 @@ class Header extends Component {
                 </Typography>
               </Hidden>
               <SearchBar
-                hintText="Buscar..."
+                placeholder="Buscar..."
                 style={{
-                  margin: '10px 30px',
-                  maxWidth: 300
+                  margin: '10px 10px',
+                  maxWidth: 280
                 }}
               />
               <Button color="inherit" onClick={toggleForm}>

@@ -25,7 +25,7 @@ const styles = theme => ({
       display: 'flex'
     },
     card: {
-      margin: theme.spacing.unit * 2,
+      margin: theme.spacing.unit,
       marginTop: theme.spacing.unit * 4,
       position: 'relative'
     },
