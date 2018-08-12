@@ -12,34 +12,25 @@ import web3 from 'Embark/web3';
 
 2. Debemos actualizar el event `handleClick`, que se dispara cuando presionamos el botón 'Publicar'. Este se encargará de guardar la información en IPFS, invocar nuestro contrato. Necesitamos obtener un estimado del gas necesario, y llamar a la funcion `create` de nuestro contrato.
 
-```
-const {create} = EtherPress.methods;
-    
-let toSend;
 
-EmbarkJS.Storage.saveText(JSON.stringify(textToSave))
-.then(ipfsHash => {
-    toSend = create(web3.utils.toHex(ipfsHash));
-    return toSend.estimateGas();
-})
-.then(estimatedGas => {
-    return toSend.send({from: web3.eth.defaultAccount, 
-                        gas: estimatedGas + 1000});
-})
-.then(receipt => {
-    console.log(receipt);
-    this.setState({
-        content: '',
-        title: ''
-    });
-})
-.catch((err) => {
-    console.error(err);
-})
-.finally(() => {
-    this.setState({isSubmitting: false});
-    this.props.afterPublish();
-});
+Guardemos el contenido del artículo en IPFS
+```
+const ipfsHash = await EmbarkJS.Storage.saveText(JSON.stringify(textToSave))
+```
+
+Luego, estimemos cuanto gas es necesario para ejecutar la función create del contrato
+
+```
+const {create} = EtherPress.methods;    
+const toSend = await create(web3.utils.toHex(ipfsHash));
+const estimatedGas = toSend.estimateGas();
+```
+
+Finalmente, invoquemos nuestro contrato
+```
+const receipt = await toSend.send({from: web3.eth.defaultAccount, 
+                                   gas: estimatedGas + 1000});
+console.log(receipt);
 ```
 
 ###### `App.js`
@@ -72,5 +63,6 @@ Y luego, dentro de un ciclo, llamaremos a `posts` para obtener cada articulo de 
 ```
 const post = posts(i).call();
 ```
+> Notese que aqui no utilizamos await. No es buena practica hacer await dentro de un ciclo. Es mejor cargar todas las promesas en un arreglo y llamar a `Promise.all`
 
 ###### `Post.js`

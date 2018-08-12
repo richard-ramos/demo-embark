@@ -30,7 +30,7 @@ class Create extends Component{
     };
   }
 
-  handleClick = event => {
+  handleClick = async event => {
     event.preventDefault();
 
     if(this.state.title.trim() == ''){
@@ -49,15 +49,16 @@ class Create extends Component{
       'content': this.state.content
     };
 
-    // TODO: Despues de guardar el texto en IPFS, y llamar el contrato,
-    // vaciar los campos
+    // TODO: Estimar gas para invocar a `create`
+
+    // TODO: Crear transacción
+
     this.setState({
+      isSubmitting: false,
       content: '',
       title: ''
     });
 
-    // TODO: Finalmente actualizar el listado de articulos
-    this.setState({isSubmitting: false});
     this.props.afterPublish();
   }
 
