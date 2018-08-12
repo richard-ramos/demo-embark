@@ -65,7 +65,7 @@ class Header extends Component {
                 </Typography>
               </Hidden>
               <SearchBar
-                hintText="Buscar..."
+                placeholder="Buscar..."
                 style={{
                   margin: '10px 10px',
                   maxWidth: 280

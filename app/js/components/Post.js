@@ -5,6 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import DownvoteIcon from '@material-ui/icons/ExpandMore';
 import EmbarkJS from 'Embark/EmbarkJS';
 import EtherPress from 'Embark/contracts/EtherPress';
+import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PropTypes from 'prop-types';
@@ -23,7 +24,7 @@ const styles = theme => ({
       display: 'flex'
     },
     card: {
-      margin: theme.spacing.unit * 2,
+      margin: theme.spacing.unit,
       marginTop: theme.spacing.unit * 4,
       position: 'relative'
     },
@@ -125,7 +126,9 @@ class Post extends Component {
         return <Card className={classes.card}>
             <CardHeader title={owner} subheader={formattedDate}
                 avatar={
+                    <Hidden smDown>
                     <Blockies seed={owner} size={7} scale={5} />
+                    </Hidden>
                 }
                 action={
                 <IconButton>
