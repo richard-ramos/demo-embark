@@ -65,9 +65,13 @@ class Post extends Component {
         this._loadAttributes();
     }
 
-    _loadAttributes = () => {
-        // TODO: Embark debe obtener el contenido de IPFS, usando this.props.description
+    _loadAttributes = async () => {
+        const ipfsHash = web3.utils.toAscii(this.props.description);
+
+        // TODO: Obtener el contenido de IPFS
+
         // TODO: Determinar si msg.sender puede votar o no
+
         this.setState({
             title: "Tres leyes de la robótica",
             content: `1. Un robot no hará daño a un ser humano o, por inacción, permitir que un ser humano sufra daño.\n
@@ -82,14 +86,16 @@ Isaac Asimov`,
         event.preventDefault();
         this.setState({isSubmitting: true});
 
-        // TODO: Llamar al contrato a la funcion vote. Luego de obtener el receipt ejecutar esto:
+        // TODO: Estima el costo de llamar a la funcion vote
+        
+        // TODO: Llamar al contrato a la funcion vote. 
+        
         this.setState({
             canVote: false,
             upvotes: this.state.upvotes + (choice == ballot.UPVOTE ? 1 : 0),
             downvotes: this.state.downvotes + (choice == ballot.DOWNVOTE ? 1 : 0)
         });
 
-        // TODO: finalmente remover el estado de submission
         this.setState({isSubmitting: false});
     }
 

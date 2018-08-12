@@ -1,5 +1,5 @@
 ## Coding: dApp
-Let’s use the code-generated `DTwitter` API and the `EmbarkJS` API to interact with our contact in our dApp. As we update the .js files, notice how Embark watches the files and compiles as we save.
+Usemos el objeto EtherPress creado en base a nuestro contrato y el API de `EmbarkJS` para interactuar con nuestro contrato desde la DApp. Mientras actualizamos los archivos, veamos como Embark vigila los cambios y los compila cada vez que guardamos.
 
 ###### `Create.js`
 
@@ -66,3 +66,47 @@ const post = posts(i).call();
 > Notese que aqui no utilizamos await. No es buena practica hacer await dentro de un ciclo. Es mejor cargar todas las promesas en un arreglo y llamar a `Promise.all`
 
 ###### `Post.js`
+
+1. Importemos EmbarkJS, web3 y nuestro contrato
+```
+import EmbarkJS from 'Embark/EmbarkJS';
+import EtherPress from 'Embark/contracts/EtherPress';
+import web3 from 'Embark/web3';
+```
+
+2. Llamemos a la funcion `this._loadAttributes()` cuando Embark este inicializado, dentro de `componentDidMount`
+```
+EmbarkJS.onReady(() => {
+    this._loadAttributes();
+});
+```
+3. Edita la funcion `_loadAttributes`. Obten el contenido almacenado en IPFS, y conviertelo a un objeto JSON
+```
+const ipfsText = await EmbarkJS.Storage.get(ipfsHash);
+const jsonContent = JSON.parse(ipfsText);
+const title = jsonContent.title;
+const content = jsonContent.content;
+this.setState({title, content});
+```
+
+4. Determina si el usuario puede votar por este artículo
+```
+const {canVote} = EtherPress.methods;
+const votingEnabled = await canVote(this.props.id).call();
+this.setState({canVote: votingEnabled});
+```
+
+5. Edita la funcion `_vote`. Estimemos el costo de llamar a la funcion `vote` del contrato.
+```
+const {vote} = EtherPress.methods;
+const toSend = vote(this.props.id, choice);
+const estimatedGas = await toSend.estimateGas();
+```
+
+6. Crea la transacción
+```
+const receipt = toSend.send({gas: estimatedGas + 1000});
+```
+
+#### Evaluemos nuestra DApp y resolvamos cualquier error
+Intentemos usar nuestra DApp a ver que tal nos quedo, y tratemos de solucionar cualquier error que hayamos introducido.
