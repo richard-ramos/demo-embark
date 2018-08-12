@@ -41,3 +41,36 @@ EmbarkJS.Storage.saveText(JSON.stringify(textToSave))
     this.props.afterPublish();
 });
 ```
+
+###### `App.js`
+1. Importemos EmbarkJS, nuestro contrato
+```
+import EmbarkJS from 'Embark/EmbarkJS';
+import EtherPress from 'Embark/contracts/EtherPress';
+```
+
+2. Llamemos a la funcion `this._loadPosts()` cuando Embark este inicializado, dentro de `componentDidMount`
+```
+EmbarkJS.onReady(() => {
+    this._loadPosts();
+});
+```
+
+3. Usemos las funciones `posts` y `numPosts` para extraer nuestros articulos del contrato.
+
+```
+const {posts, numPosts} = EtherPress.methods;
+```
+
+Con la funcion `numPosts` podemos extraer el total de artículos registrados
+```
+const total = await numPosts().call();
+```
+
+Y luego, dentro de un ciclo, llamaremos a `posts` para obtener cada articulo de forma individual.
+
+```
+const post = posts(i).call();
+```
+
+###### `Post.js`
