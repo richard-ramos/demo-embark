@@ -49,7 +49,8 @@ class Create extends Component{
       'content': this.state.content
     };
 
-    // TODO: Despues de guardar el texto en IPFS, vaciar los campos
+    // TODO: Despues de guardar el texto en IPFS, y llamar el contrato,
+    // vaciar los campos
     this.setState({
       content: '',
       title: ''
