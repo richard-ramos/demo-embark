@@ -71,9 +71,10 @@ class Post extends Component {
 
         // Obtain the content from IPFS using the `ipfsHash` variable
         const ipfsText = await EmbarkJS.Storage.get(ipfsHash);
-        const jsonContent = JSON.parse(ipfsText);
         
         // Data Obtained from IPFS
+        const jsonContent = JSON.parse(ipfsText);
+        
         const title = jsonContent.title;
         const content = jsonContent.content;
 
