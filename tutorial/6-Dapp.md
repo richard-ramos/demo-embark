@@ -13,99 +13,84 @@ import web3 from 'Embark/web3';
 2. Update the `handleClick` event, that is triggered when you press the 'Publish' button. This will save the post on IPFS, and invoke our contract. We need to obtain a gas estimate and add our post using the contract's `create` function.
 
 
-Guardemos el contenido del artículo en IPFS
+Save the content of the post in IPFS
 ```
-const ipfsHash = await EmbarkJS.Storage.saveText(JSON.stringify(textToSave))
+const ipfsHash = await EmbarkJS.Storage.saveText(JSON.stringify(textToSave));
 ```
 
-Luego, estimemos cuanto gas es necesario para ejecutar la función create del contrato
+Then, estimate the gas needed to execute the `create` function
 
 ```
-const {create} = EtherPress.methods;    
+const {create} = DReddit.methods;    
 const toSend = await create(web3.utils.toHex(ipfsHash));
-const estimatedGas = toSend.estimateGas();
+const estimatedGas = await toSend.estimateGas();
 ```
 
-Finalmente, invoquemos nuestro contrato
+Finally, generate the transaction
 ```
 const receipt = await toSend.send({from: web3.eth.defaultAccount, 
                                    gas: estimatedGas + 1000});
-console.log(receipt);
 ```
+> Notice that we added 1000 wei to the estimated gas. There are situations where the estimated gas is incorrect depending on the state of the contractor if you're deleting items from an array. Adding a extra wei value helps avoid running into an Out of Gas exception.
 
 ###### `App.js`
-1. Importemos EmbarkJS, nuestro contrato
-```
-import EmbarkJS from 'Embark/EmbarkJS';
-import EtherPress from 'Embark/contracts/EtherPress';
-```
 
-2. Llamemos a la funcion `this._loadPosts()` cuando Embark este inicializado, dentro de `componentDidMount`
+
+1. Edit `componentDidMount()`. Execute `this._loadPosts()` as soon as EmbarkJS initializes.
 ```
 EmbarkJS.onReady(() => {
     this._loadPosts();
 });
 ```
 
-3. Usemos las funciones `posts` y `numPosts` para extraer nuestros articulos del contrato.
+2. Edit `_loadPosts`. Extract the functions `posts` and `numPosts` from the contract in order to read the posts content.
 
 ```
-const {posts, numPosts} = EtherPress.methods;
+const {posts, numPosts} = DReddit.methods;
 ```
 
-Con la funcion `numPosts` podemos extraer el total de artículos registrados
+Using `numPosts` obtain the number of posts our contract has.
 ```
 const total = await numPosts().call();
 ```
 
-Y luego, dentro de un ciclo, llamaremos a `posts` para obtener cada articulo de forma individual.
+And then, inside the loop, invoke `posts` to obtain each post individually
 
 ```
 const post = posts(i).call();
 ```
-> Notese que aqui no utilizamos await. No es buena practica hacer await dentro de un ciclo. Es mejor cargar todas las promesas en un arreglo y llamar a `Promise.all`
+> Notice we are'nt using `await` here. It's not a good practice to `await` inside a loop. It's better to load all the promises inside an array, and then, call `Promise.all()` on this array.
 
 ###### `Post.js`
 
-1. Importemos EmbarkJS, web3 y nuestro contrato
 ```
-import EmbarkJS from 'Embark/EmbarkJS';
-import EtherPress from 'Embark/contracts/EtherPress';
-import web3 from 'Embark/web3';
+1. Edit `_loadAttributes`. Obtain the post from IPFS
+```
+ const ipfsText = await EmbarkJS.Storage.get(ipfsHash);
 ```
 
-2. Llamemos a la funcion `this._loadAttributes()` cuando Embark este inicializado, dentro de `componentDidMount`
+Convert the text retrieved from IPFS into a JSON object an populate `title` and `content`
 ```
-EmbarkJS.onReady(() => {
-    this._loadAttributes();
-});
-```
-3. Edita la funcion `_loadAttributes`. Obten el contenido almacenado en IPFS, y conviertelo a un objeto JSON
-```
-const ipfsText = await EmbarkJS.Storage.get(ipfsHash);
 const jsonContent = JSON.parse(ipfsText);
 const title = jsonContent.title;
 const content = jsonContent.content;
-this.setState({title, content});
 ```
 
-4. Determina si el usuario puede votar por este artículo
+Determine if the user can vote on this post
 ```
-const {canVote} = EtherPress.methods;
-const votingEnabled = await canVote(this.props.id).call();
-this.setState({canVote: votingEnabled});
+const canVote = await DReddit.methods.canVote(this.props.id).call();
 ```
 
-5. Edita la funcion `_vote`. Estimemos el costo de llamar a la funcion `vote` del contrato.
+2. Edit `_vote`. Estimate the cost of invoking the `vote` function of our DReddit contract
 ```
-const {vote} = EtherPress.methods;
+const {vote} = DReddit.methods;
 const toSend = vote(this.props.id, choice);
 const estimatedGas = await toSend.estimateGas();
 ```
 
-6. Crea la transacción
+Send the transaction
 ```
-const receipt = toSend.send({gas: estimatedGas + 1000});
+const receipt = await toSend.send({gas: estimatedGas + 1000});
 ```
 
 #### Check the DApp and hunt for bugs
