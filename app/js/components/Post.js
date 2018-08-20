@@ -69,16 +69,16 @@ class Post extends Component {
     _loadAttributes = async () => {
         const ipfsHash = web3.utils.toAscii(this.props.description);
 
-        // TODO: Obtain the content from IPFS using the `ipfsHash` variable
+        // Obtain the content from IPFS using the `ipfsHash` variable
+        const ipfsText = await EmbarkJS.Storage.get(ipfsHash);
+        const jsonContent = JSON.parse(ipfsText);
+        
+        // Data Obtained from IPFS
+        const title = jsonContent.title;
+        const content = jsonContent.content;
 
-        // TODO: Fill the `title` and `content` variables with the data obtained from IPFS
-        const title = "Isaac Asimov's \"Three Laws of Robotics\"";
-        const content = `1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.\n
-2. A robot must obey orders given it by human beings except where such orders would conflict with the First Law.\n
-3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.`;
-
-        // TODO: Determine if the current account can vote or not
-        const canVote = true;
+        // Determine if the current account can vote or not
+        const canVote = await DReddit.methods.canVote(this.props.id).call();
 
         this.setState({
             title,
@@ -91,10 +91,15 @@ class Post extends Component {
         event.preventDefault();
         this.setState({isSubmitting: true});
 
-        // TODO: Estimate the cost of invoking the function `vote` from the contract
-        
-        // TODO: Send the transaction
-        
+        // Estimate the cost of invoking the function `vote` from the contract
+        const {vote} = DReddit.methods;
+        const toSend = vote(this.props.id, choice);
+        const estimatedGas = await toSend.estimateGas();
+
+        // Send the transaction
+        const receipt = await toSend.send({gas: estimatedGas + 1000});
+        console.log(receipt);
+
         this.setState({
             canVote: false,
             upvotes: this.state.upvotes + (choice == ballot.UPVOTE ? 1 : 0),
