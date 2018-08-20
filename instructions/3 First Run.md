@@ -13,13 +13,12 @@ You should see the Embark console and it's components.
 You’ll notice from the logs and from the modules that Embark has started Go-ethereum and IPFS processes, compiled and deployed our contract, and webpacked our website for us. 
 > The contract warning in orange will disappear once we update our contract.
 
-### Take a tour of the barebones DTwitter site
+### Take a tour of the barebones DReddit site
 The website has several features that *are not yet hooked up to our contract*, but let’s take a look around at the website anyway. Launch `http://localhost:8000` in your browser.
 
 Functionality you'll see:
-* Create an account
-* Edit account
-* Tweet
-* Search and view user's tweets
+* Create a post
+* Upvote / Downvote a post
+* Search and view posts
 
 Later, we'll hook this functionality up to a contract.
