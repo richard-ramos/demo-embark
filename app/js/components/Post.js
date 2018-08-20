@@ -12,9 +12,9 @@ import dateformat from 'dateformat';
 import markdownJS from "markdown";
 import {withStyles} from '@material-ui/core/styles';
 
-// TODO: importar embark/EmbarkJS
-// TODO: importar embark/web3
-// TODO: importar embark/contracts/EtherPress
+import EmbarkJS from 'Embark/EmbarkJS';
+import DReddit from 'Embark/contracts/DReddit';
+import web3 from 'Embark/web3';
 
 const markdown = markdownJS.markdown;
 
@@ -61,34 +61,39 @@ class Post extends Component {
     }
 
     componentDidMount(){
-        // TODO: buscar atributos del post cuando Embark termine de cargar
-        this._loadAttributes();
+        EmbarkJS.onReady(() => {
+            this._loadAttributes();
+        });
     }
 
     _loadAttributes = async () => {
         const ipfsHash = web3.utils.toAscii(this.props.description);
 
-        // TODO: Obtener el contenido de IPFS
+        // TODO: Obtain the content from IPFS using the `ipfsHash` variable
 
-        // TODO: Determinar si msg.sender puede votar o no
+        // TODO: Fill the `title` and `content` variables with the data obtained from IPFS
+        const title = "Isaac Asimov's \"Three Laws of Robotics\"";
+        const content = `1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.\n
+2. A robot must obey orders given it by human beings except where such orders would conflict with the First Law.\n
+3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.`;
+
+        // TODO: Determine if the current account can vote or not
+        const canVote = true;
 
         this.setState({
-            title: "Tres leyes de la robótica",
-            content: `1. Un robot no hará daño a un ser humano o, por inacción, permitir que un ser humano sufra daño.\n
-2. Un robot debe cumplir las órdenes dadas por los seres humanos, a excepción de aquellas que entrasen en conflicto con la primera ley.\n
-3. Un robot debe proteger su propia existencia en la medida en que esta protección no entre en conflicto con la primera o con la segunda ley\n
-Isaac Asimov`,
-            canVote: true
+            title,
+            content,
+            canVote
         });
     }
 
-    _vote = choice => event => {
+    _vote = choice => async event => {
         event.preventDefault();
         this.setState({isSubmitting: true});
 
-        // TODO: Estima el costo de llamar a la funcion vote
+        // TODO: Estimate the cost of invoking the function `vote` from the contract
         
-        // TODO: Llamar al contrato a la funcion vote. 
+        // TODO: Send the transaction
         
         this.setState({
             canVote: false,

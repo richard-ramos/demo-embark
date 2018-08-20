@@ -1,9 +1,9 @@
 
 // our contract object to test
-const EtherPress = require('Embark/contracts/EtherPress');
+const DReddit = require('Embark/contracts/DReddit');
 
 // contract methods we'll be testing
-const {numPosts, create, vote, posts, canVote, getVote} = EtherPress.methods;
+const {numPosts, create, vote, posts, canVote, getVote} = DReddit.methods;
 
 // variables that will be updated in the tests
 let accounts;
@@ -12,7 +12,7 @@ let postId;
 // set up our config test parameters
 config({
   contracts: {
-    EtherPress: {
+    DReddit: {
       // would pass constructor args here if needed
     }
   }
@@ -26,7 +26,7 @@ const ipfsHash = 'Qmc5gCcjYypU7y28oCALwfSvxCBskLuPKWpK4qpterKC7z';
 
 // Embark exposes a global contract method as an alias
 // for Mocha.describe
-contract("EtherPress contract", function () {
+contract("DReddit contract", function () {
   this.timeout(0);
 
   it("should be able to create a post and receive it via contract event", async function () {    

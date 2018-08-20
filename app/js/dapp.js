@@ -1,10 +1,10 @@
 import App from './components/App';
 import EmbarkJS from 'Embark/EmbarkJS';
 import React from 'react';
-import EtherPress from 'Embark/contracts/EtherPress';
+import DReddit from 'Embark/contracts/DReddit';
 import {render} from 'react-dom';
 
 window.EmbarkJS = EmbarkJS;
-window.EtherPress = EtherPress;
+window.DReddit = DReddit;
 
 render(<App />, document.getElementById('root'));

@@ -4,8 +4,7 @@ import Header from './Header';
 import Post from './Post';
 import _ from 'lodash';
 
-// TODO: importar embark/EmbarkJS
-// TODO: importar embark/contracts/EtherPress
+// TODO: import EmbarkJS, web3 and our DReddit contract
 
 class App extends Component {
 
@@ -21,7 +20,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // TODO: cargar los posts cuando Embark este listo
+    // TODO: Invoke the next function as soon as Embark is ready
     this._loadPosts();
   }
 
@@ -35,17 +34,20 @@ class App extends Component {
   }
 
   _loadPosts = async () => {
-    // TODO: Usando las funciones posts y numPosts del contrato,
-    //       cargar todos los posts
+    // TODO: Using the functions `post` and `numPost` from our contract, load the posts
+
     let list = [];
 
-    const total = 1; // TODO:
+    const total = 1; // TODO: Use 
     if(total > 0){
         for (let i = 0; i < total; i++) {
-            const post = {
+
+            // TODO: the constant `currentPost` should have the info that comes from the `post` function of the contract.
+            //       this object here is just a placeholder.
+            const currentPost = {
               upvotes: 0, downvotes: 0, owner: "0x1234567890123456789012345678901234567890", creationDate: "153399", description: "0x00"
-            }; // TODO: esto debe venir del contrato
-            list.push(post);
+            }; 
+            list.push(currentPost);
         }
 
         list = await Promise.all(list);

@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
-// @notice Contract to create blog posts
-contract EtherPress {
+// @notice Contract to create posts
+contract DReddit {
 
     enum Ballot { NONE, UPVOTE, DOWNVOTE }
 

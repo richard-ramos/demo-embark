@@ -61,11 +61,11 @@ class Header extends Component {
             <Toolbar className={classes.toolBar}>
               <Hidden smDown>
                 <Typography variant="display1" color="inherit" className={classes.flex}>
-                Ξtherpress
+                DReddit
                 </Typography>
               </Hidden>
               <SearchBar
-                placeholder="Buscar..."
+                placeholder="Search..."
                 style={{
                   margin: '10px 10px',
                   maxWidth: 280

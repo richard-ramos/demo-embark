@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 
-// TODO: importar embark/EmbarkJS
-// TODO: importar embark/web3
-// TODO: importar embark/contracts/EtherPress
+import EmbarkJS from 'Embark/EmbarkJS';
+import DReddit from 'Embark/contracts/DReddit';
+import web3 from 'Embark/web3';
 
 const styles = theme => ({
   textField: {
@@ -34,7 +34,7 @@ class Create extends Component{
     event.preventDefault();
 
     if(this.state.title.trim() == ''){
-      this.setState({'error': 'Campo Requerido'});
+      this.setState({'error': 'Required field'});
       return;
     }
 
@@ -43,15 +43,17 @@ class Create extends Component{
       error: ''
     });
 
-    // TODO: Guardar este objeto en IPFS
+    
     const textToSave = {
       'title': this.state.title,
       'content': this.state.content
     };
 
-    // TODO: Estimar gas para invocar a `create`
+    // TODO Save the previous object in IPFS
 
-    // TODO: Crear transacción
+    // TODO: Estimate gas required to invoke the `create` function from the contract
+
+    // TODO: Send the transaction
 
     this.setState({
       isSubmitting: false,
@@ -77,7 +79,7 @@ class Create extends Component{
         <CardContent>
           <TextField
             id="title"
-            label="T&iacute;tulo"
+            label="Title"
             error={error != ""}
             multiline
             rowsMax="20"
@@ -89,7 +91,7 @@ class Create extends Component{
             margin="normal" />
           <TextField
             id="description"
-            label="Descripci&oacute;n"
+            label="Description"
             error={error != ""}
             multiline
             rowsMax="20"
@@ -100,7 +102,7 @@ class Create extends Component{
             className={classes.textField}
             margin="normal" />
           {
-            <Button variant="contained" color="primary" onClick={this.handleClick} disabled={isSubmitting }>Publicar</Button>
+            <Button variant="contained" color="primary" onClick={this.handleClick} disabled={isSubmitting }>Publish</Button>
           }
         </CardContent>
       </Card>
