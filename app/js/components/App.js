@@ -4,7 +4,8 @@ import Header from './Header';
 import Post from './Post';
 import _ from 'lodash';
 
-// TODO: import EmbarkJS, web3 and our DReddit contract
+import EmbarkJS from 'Embark/EmbarkJS';
+import DReddit from 'Embark/contracts/DReddit';
 
 class App extends Component {
 

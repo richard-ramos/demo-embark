@@ -7,9 +7,7 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 
-import EmbarkJS from 'Embark/EmbarkJS';
-import DReddit from 'Embark/contracts/DReddit';
-import web3 from 'Embark/web3';
+// TODO: import EmbarkJS, web3 and our DReddit contract
 
 const styles = theme => ({
   textField: {
