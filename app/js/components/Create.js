@@ -49,11 +49,19 @@ class Create extends Component{
       'content': this.state.content
     };
 
-    // TODO Save the previous object in IPFS
+    // Save the previous object in IPFS
+    const ipfsHash = await EmbarkJS.Storage.saveText(JSON.stringify(textToSave));
 
-    // TODO: Estimate gas required to invoke the `create` function from the contract
+    // Estimate gas required to invoke the `create` function from the contract
+    const {create} = DReddit.methods;    
+    const toSend = await create(web3.utils.toHex(ipfsHash));
+    const estimatedGas = await toSend.estimateGas();
 
-    // TODO: Send the transaction
+    // Send the transaction
+    const receipt = await toSend.send({from: web3.eth.defaultAccount, 
+                                       gas: estimatedGas + 1000});
+    
+    console.log(receipt);
 
     this.setState({
       isSubmitting: false,
