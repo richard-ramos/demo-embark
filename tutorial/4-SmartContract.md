@@ -24,7 +24,7 @@ emit NewPost(postId, msg.sender, _description);
 ```
 
 #### Upvote/Downvote a post
-We want to be able to asign a score to the posts. For that, let's work on the function `vote()` from which the users will be able to upvote or downvote each post. NOTE: this voting mechanism is very naive and not recomended to be used on real life due to not being sybil resistant:
+We want to be able to asign a score to the posts. For that, let's work on the function `vote()` from which the users will be able to upvote or downvote each post. NOTE: this voting mechanism is very naive and not recomended to be used on real life due to not being Sybil resistant:
 
 1. Determine if the post exists, and if we have already voted
 ```
@@ -48,6 +48,8 @@ l.voters[msg.sender] = b;
 ````
 emit Vote(_postId, msg.sender, _vote);
 ````
+
+> Building a Sybil resistant voting mechanism using a Proof of Identity that takes in account Privacy is a great challenge . How would you solve this problem?
 
 #### Determine if an user can vote for a post
 The users need to know somehow if they're able to vote on a post or not. There are two scenarios where a user should not be able to vote: a) The post doesn't exist, and b) The user already voted. This logic should be developed inside `canVote()`:

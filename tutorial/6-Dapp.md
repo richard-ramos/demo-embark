@@ -1,16 +1,16 @@
-## Coding: dApp
-Usemos el objeto EtherPress creado en base a nuestro contrato y el API de `EmbarkJS` para interactuar con nuestro contrato desde la DApp. Mientras actualizamos los archivos, veamos como Embark vigila los cambios y los compila cada vez que guardamos.
+## Coding our DApp
+Let's use our DReddit JS Object, and the `EmbarkJS` API to interact with our contract and IPFS. While we update oru files, notice how Embark watches and recompiles any asset we modify when we save the changes:
 
 ###### `Create.js`
 
-1. Importemos EmbarkJS, web3 y nuestro contrato
+1. Start by importing EmbarkJS, web3 and the contract object
 ```
 import EmbarkJS from 'Embark/EmbarkJS';
 import EtherPress from 'Embark/contracts/EtherPress';
 import web3 from 'Embark/web3';
 ```
 
-2. Debemos actualizar el event `handleClick`, que se dispara cuando presionamos el botón 'Publicar'. Este se encargará de guardar la información en IPFS, invocar nuestro contrato. Necesitamos obtener un estimado del gas necesario, y llamar a la funcion `create` de nuestro contrato.
+2. Update the `handleClick` event, that is triggered when you press the 'Publish' button. This will save the post on IPFS, and invoke our contract. We need to obtain a gas estimate and add our post using the contract's `create` function.
 
 
 Guardemos el contenido del artículo en IPFS
@@ -108,5 +108,5 @@ const estimatedGas = await toSend.estimateGas();
 const receipt = toSend.send({gas: estimatedGas + 1000});
 ```
 
-#### Evaluemos nuestra DApp y resolvamos cualquier error
-Intentemos usar nuestra DApp a ver que tal nos quedo, y tratemos de solucionar cualquier error que hayamos introducido.
+#### Check the DApp and hunt for bugs
+Open a browser and navigate to http://localhost:8000. Admire your creation! and try to fix any bug we may have introduced.
