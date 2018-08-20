@@ -45,6 +45,15 @@ const ballot = {
     DOWNVOTE: 2
 };
 
+const contains = (filterBy, content, title, date, owner) => {
+    filterBy = filterBy.trim().toLowerCase();
+    if(filterBy == '') return true;
+     return  content.toLowerCase().indexOf(filterBy) > -1 || 
+            title.toLowerCase().indexOf(filterBy) > -1 || 
+            date.indexOf(filterBy) > -1 || 
+            owner.toLowerCase().indexOf(filterBy) > -1;
+};
+
 class Post extends Component {
 
     constructor(props){
@@ -106,12 +115,14 @@ class Post extends Component {
 
     render(){
         const {title, content, upvotes, downvotes, isSubmitting, canVote} = this.state;
-        const {creationDate, classes, owner} = this.props;
+        const {creationDate, classes, owner, filterBy} = this.props;
         const disabled = isSubmitting || !canVote;
         const formattedDate = dateformat(new Date(creationDate * 1000), "yyyy-mm-dd HH:MM:ss");
         const mdText = markdown.toHTML(content);
 
-        return <Card className={classes.card}>
+        const display = contains(filterBy, content, title, formattedDate, owner);
+
+        return display&& <Card className={classes.card}>
             <CardHeader title={owner} subheader={formattedDate}
                 avatar={
                     <Blockies seed={owner} size={7} scale={5} />
@@ -144,6 +155,7 @@ class Post extends Component {
 }
 
 Post.propTypes = {
+    filterBy: PropTypes.string,
     upvotes: PropTypes.number.isRequired,
     downvotes: PropTypes.number.isRequired,
     classes: PropTypes.object.isRequired,

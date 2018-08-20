@@ -16,7 +16,8 @@ class App extends Component {
       'displayForm': false,
       'list': [],
       'sortBy': 'age',
-      'sortOrder': 'desc'
+      'sortOrder': 'desc',
+      'filterBy': ''
     };
   }
 
@@ -63,8 +64,12 @@ class App extends Component {
     this.setState({list});
   }
 
+  _search = (filterBy) => {
+    this.setState({filterBy});
+  }
+
   render() {
-    const {displayForm, list, sortBy, sortOrder} = this.state;
+    const {displayForm, list, sortBy, sortOrder, filterBy} = this.state;
 
     let orderedList;
     if(sortBy == 'rating'){
@@ -74,9 +79,9 @@ class App extends Component {
     }
 
     return (<Fragment>
-        <Header toggleForm={this._toggleForm} sortOrder={this._setSortOrder} />
+        <Header toggleForm={this._toggleForm} sortOrder={this._setSortOrder} search={this._search} />
         { displayForm && <Create afterPublish={this._loadPosts} /> }
-        { orderedList.map((record) => <Post key={record.id} {...record} />) }
+        { orderedList.map((record) => <Post key={record.id} {...record} filterBy={filterBy} />) }
         </Fragment>
     );
   }
