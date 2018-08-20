@@ -1,4 +1,4 @@
-## Coding our DApp
+## Coding our dApp
 Let's use our DReddit JS Object, and the `EmbarkJS` API to interact with our contract and IPFS. While we update oru files, notice how Embark watches and recompiles any asset we modify when we save the changes:
 
 ###### `Create.js`
@@ -9,9 +9,9 @@ import EmbarkJS from 'Embark/EmbarkJS';
 import EtherPress from 'Embark/contracts/EtherPress';
 import web3 from 'Embark/web3';
 ```
+> Both EmbarkJS and web3 are normally imported whenever there's a need to interact with web3 technologies. You'll see these imports present in both `App.js` and `Post.js`
 
 2. Update the `handleClick` event, that is triggered when you press the 'Publish' button. This will save the post on IPFS, and invoke our contract. We need to obtain a gas estimate and add our post using the contract's `create` function.
-
 
 Save the content of the post in IPFS
 ```
@@ -42,6 +42,7 @@ EmbarkJS.onReady(() => {
     this._loadPosts();
 });
 ```
+> `onReady()` is used if you want to execute any action that uses EmbarkJS or web3 as soon as the page loads.
 
 2. Edit `_loadPosts`. Extract the functions `posts` and `numPosts` from the contract in order to read the posts content.
 
@@ -59,7 +60,7 @@ And then, inside the loop, invoke `posts` to obtain each post individually
 ```
 const post = posts(i).call();
 ```
-> Notice we are'nt using `await` here. It's not a good practice to `await` inside a loop. It's better to load all the promises inside an array, and then, call `Promise.all()` on this array.
+> Notice we aren't using `await` here. It's not a good practice to `await` inside a loop. It's better to load all the promises inside an array, and then, call `Promise.all()` on this array.
 
 ###### `Post.js`
 
@@ -72,6 +73,7 @@ const post = posts(i).call();
 Convert the text retrieved from IPFS into a JSON object an populate `title` and `content`
 ```
 const jsonContent = JSON.parse(ipfsText);
+
 const title = jsonContent.title;
 const content = jsonContent.content;
 ```
@@ -93,5 +95,5 @@ Send the transaction
 const receipt = await toSend.send({gas: estimatedGas + 1000});
 ```
 
-#### Check the DApp and hunt for bugs
-Open a browser and navigate to http://localhost:8000. Admire your creation! and try to fix any bug we may have introduced.
+#### Check the dApp
+Open a browser, navigate to http://localhost:8000 and admire your creation! and also try to fix any bug we may have introduced.

@@ -1,5 +1,5 @@
 ## Unit testing
-Now that we finished coding our contract, we can proceed to build unit testing for it. Embark generates javascript code for interacting with the contract `DReddit` and will make it possible to use it from both our unit tests and our DApp. There are some tests already implemented in `./test/contract_spec.js`, but we will add a couple that illustrate the most common test case scenarios
+Now that we finished coding our contract, we can proceed to build unit testing for it. Embark generates javascript code for interacting with the contract `DReddit` and will make it possible to use it from both our unit tests and our dApp. There are some tests already implemented in `./test/contract_spec.js`, but we will add a couple that illustrate the most common test case scenarios
 
 ### We should be able to create a post and receive it via contract event
 ```
