@@ -51,7 +51,7 @@ class Header extends Component {
   };
 
   render(){
-    const {classes, toggleForm} = this.props;
+    const {classes, toggleForm, search} = this.props;
     const {anchorEl, sortIndex} = this.state;
     const open = Boolean(anchorEl);
 
@@ -69,8 +69,9 @@ class Header extends Component {
                 style={{
                   margin: '10px 10px',
                   maxWidth: 280
-                }}
-              />
+                }} 
+                onChange={(searchValue) => search(searchValue)}
+               />
               <Button color="inherit" onClick={toggleForm}>
                 <AddIcon />
               </Button>
@@ -103,7 +104,8 @@ class Header extends Component {
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
   toggleForm: PropTypes.func.isRequired,
-  sortOrder: PropTypes.func.isRequired
+  sortOrder: PropTypes.func.isRequired,
+  search: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(Header);
