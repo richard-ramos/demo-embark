@@ -47,7 +47,7 @@ class Create extends Component{
       'content': this.state.content
     };
 
-    // TODO Save the previous object in IPFS
+    // TODO: Save the previous object in IPFS
 
     // TODO: Estimate gas required to invoke the `create` function from the contract
 
