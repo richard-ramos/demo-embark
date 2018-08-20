@@ -1,13 +1,12 @@
-## Coding: Nuestro contrato
-Empezaremos por modificar `./contracts/EtherPress.sol` y ver como Embark recompila todo por nosotros mientras realizamos cambios.
+## Coding our contract
+Let's start by modifying `./contracts/DReddit.sol` and see how Embark recompiles our contract whenever we update and save or file.
 
-### Funciones
-Empecemos por escribir funciones para nuestro contrato:
+### Functions
 
-#### Crear un artículo
-La funcion `create` sera utilizada para crear nuestros artículos. Necesitamos agregar un nuevo post al arreglo `posts[]` y emitir un evento indicando que un nuevo artículo fue creado.
+#### Create a post
+The `create` function is used to publish our posts. We need to add a new post to `posts[]` and emit an event indicating that a new post was created:
 
-1. Agregamos un `Post` al arreglo, ingresando sus detalles. Para la fecha de creacion usa `block.timestamp`
+1. Add a `Post` to the `posts[]` array, asigning values to its attributes. For the `creationDate` use `block.timestamp`
 ```
 uint postId = posts.length++;
 posts[postId] = Post({
@@ -18,22 +17,23 @@ posts[postId] = Post({
     downvotes: 0
 });
 ```
-2. Generamos un evento
+
+2. Emit the `NewPost` event
 ```
 emit NewPost(postId, msg.sender, _description);
 ```
 
-#### Votar por un artículo
-Queremos poder asignarle una puntuación a nuestro artículo. Para eso, trabajemos en la funcion `vote()` donde los usuarios podran sumar o restar puntos a cada registro. NOTA: este sistema de puntuación es muy inocente y no recomendado para usarse en la vida real.
+#### Upvote/Downvote a post
+We want to be able to asign a score to the posts. For that, let's work on the function `vote()` from which the users will be able to upvote or downvote each post. NOTE: this voting mechanism is very naive and not recomended to be used on real life due to not being sybil resistant:
 
-1. Determinemos si el artículo existe y si ya hemos votado anteriormente
+1. Determine if the post exists, and if we have already voted
 ```
 Post storage p = posts[_postId];
 require(p.creationDate != 0, "Post does not exist");
 require(p.voters[msg.sender] == Ballot.NONE, "You already voted on this post");
 ```
 
-2. Guardemos nuestro voto y actualicemos el score del artículo
+2. Store the vote and update the post score
 ```
 Ballot b = Ballot(_vote);
 if (b == Ballot.UPVOTE) {
@@ -44,29 +44,29 @@ if (b == Ballot.UPVOTE) {
 l.voters[msg.sender] = b;
 ```
 
-3. Generemos un evento
+3. Emit the event
 ````
 emit Vote(_postId, msg.sender, _vote);
 ````
 
-#### Determinar si podemos votar en un artículo
-Necesitamos poder indicarle a los usuarios si ellos pueden votar o no por un artículo. Hay dos escenarios en los cuales un usuario no puede votar: a) El artículo no existe, y b) Ya se votó anteriormente. Trabajemos en la funcion `canVote`
+#### Determine if an user can vote for a post
+The users need to know somehow if they're able to vote on a post or not. There are two scenarios where a user should not be able to vote: a) The post doesn't exist, and b) The user already voted. This logic should be developed inside `canVote()`:
 
-1. Podemos determinar si el artículo existe si el Id del mismo es valido
+1. Determine if the posts exists
 ```
 if(_postId > posts.length - 1) return false;
 ```
 
-2. Si el artículo existe, es cuestion de ver la dirección que invoca el contrato ya votó
+2. If the post exists, we will only allow voting if the user hasn't voted yet
 ```    
 Post storage p = posts[_postId];    
 return (p.voters[msg.sender] == Ballot.NONE);
 ```
 
-#### Determinar cual fue nuestro voto
-En caso de que el usuario ya haya votado, es posible que tenga interés en saber cual fue su decisión. Implementemos esto en `getVote`.
+#### Determine the user's vote
+It's possible an user would like to know what was his choice on a previously voted post. Implement this on `getVote()`.
 ```
 Post storage p = posts[_postId];
 return uint8(p.voters[msg.sender]);
 ```
-> Observa que en las ultimas dos funciones los valores de entrada y salida relacionados con el voto son uint8 en vez de un enum. Esto se debe a que web3js no soporta aun el uso de enums.
+> Notice that on the last two functions, the input and output values related to votes are uin8 instead of an enum. Enum are not a valid input/output value for functions at least on the current solidity version.

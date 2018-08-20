@@ -1,8 +1,7 @@
-## Pruebas unitarias
-Ahora que nuestro contrato esta escrito, podemos usar el código generado por Embark para escribir pruebas unitarias para nuestros contratos. Embark generará el código necesario para crear un objeto de javascript de nuestro contrato `EtherPress` y hará que sea accesible tanto desde nuestras pruebas unitarias como desde nuestra DApp. 
+## Unit testing
+Now that we finished coding our contract, we can proceed to build unit testing for it. Embark generates javascript code for interacting with the contract `DReddit` and will make it possible to use it from both our unit tests and our DApp. There are some tests already implemented in `./test/contract_spec.js`, but we will add a couple that illustrate the most common test case scenarios
 
-Las pruebas que haremos seran las siguientes:
-### Crear un artículo y recibir su resultado via un evento
+### We should be able to create a post and receive it via contract event
 ```
     await create(web3.utils.fromAscii(ipfsHash)).send();
 
@@ -16,39 +15,14 @@ Las pruebas que haremos seran las siguientes:
     });
 ```
 
-### Debe existir al menos 1 artículo registrado
-```
-const n = await numPosts().call();
-assert.equal(n, 1);
-```
-
-### La data de los artículos debe ser correcta
+### The post should have correct data
 ```
 const post = await posts(postId).call();
 assert.equal(web3.utils.toAscii(post.description), ipfsHash);
 assert.equal(post.owner, accounts[0]);
 ```
 
-### No se debe poder votar en un artículo inexistente
-```
-const userCanVote = await canVote(123).call();
-assert.equal(userCanVote, false);
-```
-
-### Se debe poder votar por un artículo si no se ha votado anteriormente por el
-```
-const userCanVote = await canVote(postId).call();
-assert.equal(userCanVote, true);
-```
-
-### Se debe poder votar por un artículo
-```
-const receipt = await vote(postId, 1).send();
-const Vote = receipt.events.Vote;
-assert.equal(Vote.returnValues.voter, accounts[0]);
-```
-
-### No se debe poder votar mas de una vez por el mismo artículo
+### We should't be able to vote twice for the same post
 ```
 try {
     const receipt = await vote(postId, 1).send();
@@ -58,15 +32,15 @@ try {
 }
 ```
 
-### Ejecutar las pruebas
-Ejecutemos las pruebas para ver su resultado. En una terminal, escribe:
+### Running the tests
+To execute the tests and see their result, on a terminal session run:
 ```
 embark test
 ```
-### Resultados
-Los resultados de tus pruebas unitarias deben ser similares a los siguientes:
+### Results
+The results of your test unit should be similar to the following:
 ```
-  EtherPress contract
+  DReddit contract
     ✓ should be able to create a post and receive it via contract event
     ✓ should return 1 post
     ✓ post should have correct data
